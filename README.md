@@ -6,7 +6,7 @@ Create Robohashes with C# and .NET
 
 ## Idea and Code
 
-The original idea and code was provided by [Colin Davis][robohash-src].
+The original idea and (phyton) code was provided by [Colin Davis][robohash-src].
 
 ## See Also
 
