@@ -47,6 +47,12 @@
       <Link>README.md</Link>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Robohash.Net.Resources\Robohash.Net.Resources.csproj">
+      <Project>{bbe45286-3846-42a4-9809-b632f6d624fe}</Project>
+      <Name>Robohash.Net.Resources</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

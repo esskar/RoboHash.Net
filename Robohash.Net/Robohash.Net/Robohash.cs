@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,6 +11,25 @@ namespace Robohash.Net
     public class Robohash
     {
         private const int HashCount = 11;
+        private const string SetsDir = "sets";
+        private const string BackgroundsDir = "backgrounds";
+
+        private static readonly string _resourcePath;
+        private static readonly string[] _sets;
+        private static readonly string[] _backgrounds;
+        private static readonly string[] _colors;
+
+        static Robohash()
+        {
+            var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+
+            _resourcePath = Path.GetDirectoryName(assembly.Location);
+            if (_resourcePath == null)
+                throw new InvalidOperationException("Failed to retrieve resource path.");
+            _sets = Directory.GetDirectories(Path.Combine(_resourcePath, SetsDir));
+            _backgrounds = Directory.GetDirectories(Path.Combine(_resourcePath, BackgroundsDir));
+            _colors = Directory.GetDirectories(_sets[0]);
+        }
 
         /// <summary>
         /// Creates a robohash from the given text.
@@ -57,7 +77,10 @@ namespace Robohash.Net
         {
             this.HexDigest = CreateHexDigest(stream);
             this.Indices = CreateIndices(this.HexDigest, HashCount).ToArray();
+            
         }
+
+        public string[] AvailableSets { get; private set; }
 
         /// <summary>
         /// Gets the hexadecimal digest.
@@ -74,6 +97,14 @@ namespace Robohash.Net
         /// The indices.
         /// </value>
         public long[] Indices { get; private set; }
+
+        /// <summary>
+        /// Gets the resource directory.
+        /// </summary>
+        /// <value>
+        /// The resourcedir.
+        /// </value>
+        public string ResourceDirectory { get; private set; }
 
         #region Helpers
 
