@@ -11,18 +11,35 @@ namespace Robohash.Net
     {
         private const int HashCount = 11;
 
+        /// <summary>
+        /// Creates a robohash from the given text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
         public static Robohash Create(string text)
         {
             var bytes = Encoding.UTF8.GetBytes(text);
             return Create(bytes, 0, bytes.Length);
         }
 
+        /// <summary>
+        /// Creates a robohash from the given byte array.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="length">The length.</param>
+        /// <returns></returns>
         public static Robohash Create(byte[] bytes, int offset, int length)
         {
             using (var memory = new MemoryStream(bytes, offset, length))
                 return Create(memory);
         }
 
+        /// <summary>
+        /// Creates a robohash from the specified stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns></returns>
         public static Robohash Create(Stream stream)
         {
             var robohash = new Robohash();
@@ -32,15 +49,31 @@ namespace Robohash.Net
 
         private Robohash() { }
 
+        /// <summary>
+        /// Initializes the robohash from the given stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
         private void Initialize(Stream stream)
         {
             this.HexDigest = CreateHexDigest(stream);
-            this.Hashes = CreateHashes(this.HexDigest, HashCount).ToArray();
+            this.Indices = CreateIndices(this.HexDigest, HashCount).ToArray();
         }
 
+        /// <summary>
+        /// Gets the hexadecimal digest.
+        /// </summary>
+        /// <value>
+        /// The hexadecimal digest.
+        /// </value>
         public string HexDigest { get; private set; }
 
-        public long[] Hashes { get; private set; }
+        /// <summary>
+        /// Gets the indices.
+        /// </summary>
+        /// <value>
+        /// The indices.
+        /// </value>
+        public long[] Indices { get; private set; }
 
         #region Helpers
 
@@ -53,7 +86,7 @@ namespace Robohash.Net
             }
         }
 
-        private static IEnumerable<long> CreateHashes(string hexDigest, int hashCount)
+        private static IEnumerable<long> CreateIndices(string hexDigest, int hashCount)
         {
             var blockSize = hexDigest.Length / hashCount;
             for (var i = 0; i < hashCount; ++i)

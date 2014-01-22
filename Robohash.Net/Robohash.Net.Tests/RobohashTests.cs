@@ -15,7 +15,7 @@ namespace Robohash.Net.Tests
             "ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff"
         };
 
-        private readonly long[][] _hashes =
+        private readonly long[][] _indices =
         {
             new []{ 16365621466287L, 8689954724494L, 15651140704547L, 16911593142062L, 4896136993373L, 5033937449594L, 13298821631517L, 6564044389512L, 8784947790707L, 3036622380969L, 11926704062288L}
         };
@@ -31,17 +31,17 @@ namespace Robohash.Net.Tests
         }
 
         [TestMethod]
-        public void HashesTests()
+        public void IndicesTests()
         {
             for (var i = 0; i < _inputs.Length; ++i)
             {
                 var r = Robohash.Create(_inputs[i]);
 
-                var h = _hashes[i];
-                Assert.AreEqual(h.Length, r.Hashes.Length, "Hashes length for input #{0} does not match.", i);
+                var h = _indices[i];
+                Assert.AreEqual(h.Length, r.Indices.Length, "Indices length for input #{0} does not match.", i);
                 for (var x = 0; x < h.Length; ++x)
                 {
-                    Assert.AreEqual(h[i], r.Hashes[i], "Hash at position {1} of input #{0} does not match.", i, x);
+                    Assert.AreEqual(h[i], r.Indices[i], "Index at position {1} of input #{0} does not match.", i, x);
                 }
             }
         }
