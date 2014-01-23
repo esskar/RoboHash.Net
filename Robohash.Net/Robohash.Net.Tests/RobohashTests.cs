@@ -57,7 +57,7 @@ namespace Robohash.Net.Tests
             for (var i = 0; i < _inputs.Length; ++i)
             {
                 var r = Robohash.Create(_inputs[i]);
-                using (var image = r.Render(1024, 1024))
+                using (var image = r.Render())
                 {
                     var name = _inputs[i] + ".png";
                     image.Save(Path.Combine(path, name), ImageFormat.Png);
