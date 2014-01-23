@@ -16,7 +16,12 @@ namespace RoboHash.Net.Internals
 
         static DefaultImageFileProvider()
         {
+
+#if SILVERLIGHT
+            var assembly = Assembly.GetExecutingAssembly();
+#else
             var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+#endif
 
             _resourcePath = Path.GetDirectoryName(assembly.Location);
             if (_resourcePath == null)
@@ -54,7 +59,15 @@ namespace RoboHash.Net.Internals
 
         public IList<string> GetFiles(string path)
         {
+#if SILVERLIGHT
+
+            return Directory.EnumerateFiles(path).ToArray();
+
+#else
+
             return Directory.GetFiles(path);
+            
+#endif
         }
 
         private static IEnumerable<string> GetDirectoryNames(string path)
