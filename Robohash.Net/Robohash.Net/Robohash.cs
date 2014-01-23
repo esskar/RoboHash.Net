@@ -89,10 +89,7 @@ namespace Robohash.Net
         {
             this.HexDigest = CreateHexDigest(stream);
             this.Indices = CreateIndices(this.HexDigest, HashCount).ToArray();
-
         }
-
-        public string[] AvailableSets { get; private set; }
 
         /// <summary>
         /// Gets the hexadecimal digest.
@@ -183,7 +180,7 @@ namespace Robohash.Net
             return retval;
         }        
 
-        private List<string> GetImageFiles(string path)
+        private IEnumerable<string> GetImageFiles(string path)
         {
             var index = ImageIndex;
 
@@ -229,33 +226,7 @@ namespace Robohash.Net
                 yield return dirPath;
             }
         }
-
-        private class ImageFileSorter : IComparer<string>
-        {
-            private readonly Dictionary<string, string> _lookup;
-
-            public ImageFileSorter()
-            {
-                _lookup = new Dictionary<string, string>();
-            }
-
-            public int Compare(string x, string y)
-            {
-                return string.Compare(Lookup(x), Lookup(y), System.StringComparison.Ordinal);
-            }
-
-            private string Lookup(string imageFilePath)
-            {
-                string value;
-                if (_lookup.TryGetValue(imageFilePath, out value)) 
-                    return value;
-
-                value = imageFilePath.Split('#')[1];
-                _lookup.Add(imageFilePath, value);
-                return value;
-            }
-        }
-
+        
         private static readonly string[] _base16CharTable =
         {
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f",
@@ -289,6 +260,32 @@ namespace Robohash.Net
             // ReSharper restore ForCanBeConvertedToForeach
 
             return sb.ToString();
+        }
+
+        private class ImageFileSorter : IComparer<string>
+        {
+            private readonly Dictionary<string, string> _lookup;
+
+            public ImageFileSorter()
+            {
+                _lookup = new Dictionary<string, string>();
+            }
+
+            public int Compare(string x, string y)
+            {
+                return string.Compare(Lookup(x), Lookup(y), System.StringComparison.Ordinal);
+            }
+
+            private string Lookup(string imageFilePath)
+            {
+                string value;
+                if (_lookup.TryGetValue(imageFilePath, out value))
+                    return value;
+
+                value = imageFilePath.Split('#')[1];
+                _lookup.Add(imageFilePath, value);
+                return value;
+            }
         }
 
         #endregion
