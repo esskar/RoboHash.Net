@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,14 +12,24 @@ namespace Robohash.Net
 {
     public class Robohash
     {
+        public const string Any = "any";
+
         private const int HashCount = 11;
         private const string SetsDir = "sets";
         private const string BackgroundsDir = "backgrounds";
+        private const int ColorIndex = 0;
+        private const int SetIndex = 1;
+        private const int BackgroundSetIndex = 2;
+        private const int BackgroundIndex = 3;
+        private const int ImageIndex = 4;
+        private const int Width = 1024;
+        private const int Height = 1024;
 
         private static readonly string _resourcePath;
-        private static readonly string[] _sets;
-        private static readonly string[] _backgrounds;
-        private static readonly string[] _colors;
+
+        public static readonly string[] Sets;
+        public static readonly string[] BackgroundSets;
+        public static readonly string[] Colors;
 
         static Robohash()
         {
@@ -26,9 +38,9 @@ namespace Robohash.Net
             _resourcePath = Path.GetDirectoryName(assembly.Location);
             if (_resourcePath == null)
                 throw new InvalidOperationException("Failed to retrieve resource path.");
-            _sets = Directory.GetDirectories(Path.Combine(_resourcePath, SetsDir));
-            _backgrounds = Directory.GetDirectories(Path.Combine(_resourcePath, BackgroundsDir));
-            _colors = Directory.GetDirectories(_sets[0]);
+            Sets = GetDirectoryNames(Path.Combine(_resourcePath, SetsDir)).ToArray();
+            BackgroundSets = GetDirectoryNames(Path.Combine(_resourcePath, BackgroundsDir)).ToArray();
+            Colors = GetDirectoryNames(Path.Combine(_resourcePath, SetsDir, Sets[0])).ToArray();
         }
 
         /// <summary>
@@ -77,7 +89,7 @@ namespace Robohash.Net
         {
             this.HexDigest = CreateHexDigest(stream);
             this.Indices = CreateIndices(this.HexDigest, HashCount).ToArray();
-            
+
         }
 
         public string[] AvailableSets { get; private set; }
@@ -99,12 +111,89 @@ namespace Robohash.Net
         public long[] Indices { get; private set; }
 
         /// <summary>
-        /// Gets the resource directory.
+        /// Renders the specified width.
         /// </summary>
-        /// <value>
-        /// The resourcedir.
-        /// </value>
-        public string ResourceDirectory { get; private set; }
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <returns></returns>
+        public Image Render(int width = 400, int height = 400)
+        {
+            return this.Render(null, null, null, width, height);
+        }
+
+        /// <summary>
+        /// Renders the specified set.
+        /// </summary>
+        /// <param name="set">The set.</param>
+        /// <param name="backgroundSet">The background set.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <returns></returns>
+        public Image Render(string set, string backgroundSet, string color, int width, int height)
+        {
+            // Allow users to manually specify a robot 'set' that they like.
+            // Ensure that this is one of the allowed choices, or allow all
+            // If they don't set one, take the first entry from sets above.
+            if (set == Any)
+                set = Sets[this.Indices[SetIndex] % Sets.Length];
+            else if (!Sets.Contains(set))
+                set = Sets[0];
+
+            // Only set1 is setup to be color-seletable. The others don't have enough pieces in various colors.
+            // This could/should probably be expanded at some point.. 
+            // Right now, this feature is almost never used. ( It was < 44 requests this year, out of 78M reqs )
+            if (set == Sets[0])
+            {
+                if (Colors.Contains(color))
+                    set = Path.Combine(set, color);
+                else
+                    set = Path.Combine(set, Colors[this.Indices[ColorIndex] % Colors.Length]);
+            }
+
+            // If they specified a background, ensure it's legal, then give it to them.
+            if (backgroundSet == Any)
+                backgroundSet = BackgroundSets[this.Indices[BackgroundIndex] % BackgroundSets.Length];
+            else if (!BackgroundSets.Contains(backgroundSet))
+                backgroundSet = null;
+
+            // Each directory in our set represents one piece of the Robot, such as the eyes, nose, mouth, etc.
+
+            // Each directory is named with two numbers - The number before the # is the sort order.
+            // This ensures that they always go in the same order when choosing pieces, regardless of OS.
+
+            // The second number is the order in which to apply the pieces.
+            // For instance, the head has to go down BEFORE the eyes, or the eyes would be hidden.
+
+            // First, we'll get a list of parts of our robot.
+            var roboImages = this.GetImageFiles(Path.Combine(_resourcePath, SetsDir, set));
+
+            var retval = new Bitmap(Width, Height);
+            using (var canvas = Graphics.FromImage(retval))
+            {
+                canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                foreach (var imageFile in roboImages)
+                {
+                    using(var image = Image.FromFile(imageFile))
+                        canvas.DrawImage(image, new Rectangle(0, 0, Width, Height), new Rectangle(0, 0, image.Width, image.Height), GraphicsUnit.Pixel);
+                }
+                canvas.Save();
+            }
+
+            return retval;
+        }        
+
+        private List<string> GetImageFiles(string path)
+        {
+            var index = ImageIndex;
+
+            var retval = Directory.EnumerateDirectories(path)
+                .Select(Directory.GetFiles)
+                .Select(files => files[this.Indices[index++]%files.Length]).ToList();
+            retval.Sort(new ImageFileSorter());
+
+            return retval;
+        }
 
         #region Helpers
 
@@ -122,8 +211,48 @@ namespace Robohash.Net
             var blockSize = hexDigest.Length / hashCount;
             for (var i = 0; i < hashCount; ++i)
             {
-                var sub = hexDigest.Substring(i*blockSize, blockSize);
+                var sub = hexDigest.Substring(i * blockSize, blockSize);
                 yield return Convert.ToInt64(sub, 16);
+            }
+        }
+
+        private static IEnumerable<string> GetDirectoryNames(string path)
+        {
+            foreach (var iterDir in Directory.EnumerateDirectories(path))
+            {
+                var dirPath = iterDir;
+                if (dirPath.StartsWith(path))
+                {
+                    dirPath = dirPath.Substring(path.Length);
+                    dirPath = dirPath.TrimStart('\\', '/');
+                }
+                yield return dirPath;
+            }
+        }
+
+        private class ImageFileSorter : IComparer<string>
+        {
+            private readonly Dictionary<string, string> _lookup;
+
+            public ImageFileSorter()
+            {
+                _lookup = new Dictionary<string, string>();
+            }
+
+            public int Compare(string x, string y)
+            {
+                return string.Compare(Lookup(x), Lookup(y), System.StringComparison.Ordinal);
+            }
+
+            private string Lookup(string imageFilePath)
+            {
+                string value;
+                if (_lookup.TryGetValue(imageFilePath, out value)) 
+                    return value;
+
+                value = imageFilePath.Split('#')[1];
+                _lookup.Add(imageFilePath, value);
+                return value;
             }
         }
 

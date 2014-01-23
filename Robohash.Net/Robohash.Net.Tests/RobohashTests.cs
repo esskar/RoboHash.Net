@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Drawing.Imaging;
+using System.IO;
+using System.Reflection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Robohash.Net.Tests
 {
@@ -42,6 +45,22 @@ namespace Robohash.Net.Tests
                 for (var x = 0; x < h.Length; ++x)
                 {
                     Assert.AreEqual(h[i], r.Indices[i], "Index at position {1} of input #{0} does not match.", i, x);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void RenderTests()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tests");
+            Directory.CreateDirectory(path);
+            for (var i = 0; i < _inputs.Length; ++i)
+            {
+                var r = Robohash.Create(_inputs[i]);
+                using (var image = r.Render(1024, 1024))
+                {
+                    var name = _inputs[i] + ".png";
+                    image.Save(Path.Combine(path, name), ImageFormat.Png);
                 }
             }
         }
