@@ -2261,6 +2261,7 @@
     <Compile Include="..\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Importer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

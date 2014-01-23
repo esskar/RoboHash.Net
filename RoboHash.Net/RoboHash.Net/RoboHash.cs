@@ -10,13 +10,19 @@ namespace RoboHash.Net
 {
     public class RoboHash : RoboHashBase<Image>
     {
-        private static readonly IRoboHashImageFileProvider _imageFileProvider;
-        private static readonly IRoboHashDigestGenerator _digestGenerator;
+        private static IRoboHashImageFileProvider _imageFileProvider;
+        private static IRoboHashDigestGenerator _digestGenerator;
 
-        static RoboHash()
+        public static IRoboHashImageFileProvider ImageFileProvider
         {
-            _imageFileProvider = new DefaultImageFileProvider();
-            _digestGenerator = new DefaultDigestGenerator();
+            get { return _imageFileProvider ?? (_imageFileProvider = new DefaultImageFileProvider()); }
+            set { _imageFileProvider = value; }
+        }
+
+        public static IRoboHashDigestGenerator DigestGenerator
+        {
+            get { return _digestGenerator ?? (_digestGenerator = new DefaultDigestGenerator()); }
+            set { _digestGenerator = value; }
         }
 
         /// <summary>
@@ -50,8 +56,8 @@ namespace RoboHash.Net
         /// <returns></returns>
         public static RoboHash Create(Stream stream)
         {
-            var hexDigest = _digestGenerator.GenerateHexDigest(stream);
-            return new RoboHash(hexDigest, _imageFileProvider);
+            var hexDigest = RoboHash.DigestGenerator.GenerateHexDigest(stream);
+            return new RoboHash(hexDigest, RoboHash.ImageFileProvider);
         }
 
         public RoboHash(string hexDigest, IRoboHashImageFileProvider imageFileProvider)

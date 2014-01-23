@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace RoboHash.Net.Internals
 {
-    internal class DefaultDigestGenerator : RoboHashDigestGeneratorBase
+    public class DefaultDigestGenerator : RoboHashDigestGeneratorBase
     {
         public override byte[] GenerateDigest(Stream stream)
         {

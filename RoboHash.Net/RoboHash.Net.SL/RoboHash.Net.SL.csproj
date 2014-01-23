@@ -100,6 +100,12 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RoboHash.Net.Resources\RoboHash.Net.Resources.csproj">
+      <Project>{bbe45286-3846-42a4-9809-b632f6d624fe}</Project>
+      <Name>RoboHash.Net.Resources</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

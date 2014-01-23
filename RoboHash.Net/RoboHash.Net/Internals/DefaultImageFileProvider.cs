@@ -2,34 +2,28 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using RoboHash.Net.Interfaces;
 
 namespace RoboHash.Net.Internals
 {
-    internal class DefaultImageFileProvider : IRoboHashImageFileProvider
+    public class DefaultImageFileProvider : IRoboHashImageFileProvider
     {
-        private static readonly string[] _sets;
-        private static readonly string[] _backgroundSets;
-        private static readonly string[] _colors;
-        private static readonly string _resourcePath;
+        private readonly string[] _sets;
+        private readonly string[] _backgroundSets;
+        private readonly string[] _colors;
+        private readonly string _basePath;
 
-        static DefaultImageFileProvider()
+        public DefaultImageFileProvider()
+            : this(Path.GetDirectoryName(typeof(Resources.Importer).Assembly.Location)) { }
+
+        public DefaultImageFileProvider(string basePath)
         {
-
-#if SILVERLIGHT
-            var assembly = Assembly.GetExecutingAssembly();
-#else
-            var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-#endif
-
-            _resourcePath = Path.GetDirectoryName(assembly.Location);
-            if (_resourcePath == null)
-                throw new InvalidOperationException("Failed to retrieve resource path.");
-
-            _sets = GetDirectoryNames(Path.Combine(_resourcePath, RoboConsts.SetsDir)).ToArray();
-            _backgroundSets = GetDirectoryNames(Path.Combine(_resourcePath, RoboConsts.BackgroundsDir)).ToArray();
-            _colors = GetDirectoryNames(Path.Combine(_resourcePath, RoboConsts.SetsDir, _sets[0])).ToArray();
+            if (basePath == null)
+                throw new ArgumentException("basePath");
+            _basePath = basePath;
+            _sets = GetDirectoryNames(Path.Combine(_basePath, RoboConsts.SetsDir)).ToArray();
+            _backgroundSets = GetDirectoryNames(Path.Combine(_basePath, RoboConsts.BackgroundsDir)).ToArray();
+            _colors = GetDirectoryNames(Path.Combine(_basePath, RoboConsts.SetsDir, _sets[0])).ToArray();
         }
 
         public string[] Sets
@@ -49,7 +43,7 @@ namespace RoboHash.Net.Internals
 
         public string BasePath
         {
-            get { return _resourcePath; }
+            get { return _basePath; }
         }
 
         public IEnumerable<string> GetDirectories(string path)
