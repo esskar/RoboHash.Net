@@ -40,11 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Interfaces\IRoboHashDigestGenerator.cs" />
     <Compile Include="Interfaces\IRoboHashImageFileProvider.cs" />
     <Compile Include="Internals\DefaultDigestGenerator.cs" />
     <Compile Include="Internals\DefaultImageFileProvider.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoboConsts.cs" />
     <Compile Include="RoboHash.cs" />
     <Compile Include="RoboHashBase.cs" />
@@ -61,7 +63,14 @@
       <Name>RoboHash.Net.Resources</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
