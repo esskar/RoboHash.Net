@@ -12,7 +12,7 @@ namespace RoboHash.Net
 
         private readonly long[] _indicies;
         private readonly string _hexDigest;
-
+        
         protected RoboHashBase(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
         {
             if (string.IsNullOrEmpty(hexDigest) || (hexDigest.Length % 2) != 0)
@@ -80,7 +80,7 @@ namespace RoboHash.Net
             // Only set1 is setup to be color-seletable. The others don't have enough pieces in various colors.
             // This could/should probably be expanded at some point.. 
             // Right now, this feature is almost never used. ( It was < 44 requests this year, out of 78M reqs )
-            if (set == _imageFileProvider.Sets[0])
+            if (_imageFileProvider.Sets[0].Equals(set, StringComparison.OrdinalIgnoreCase))
             {
                 if (_imageFileProvider.Colors.Contains(color))
                     set = Path.Combine(set, color);
