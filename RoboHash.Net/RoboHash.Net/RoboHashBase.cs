@@ -102,8 +102,14 @@ namespace RoboHash.Net
             // The second number is the order in which to apply the pieces.
             // For instance, the head has to go down BEFORE the eyes, or the eyes would be hidden.
 
-            // First, we'll get a list of parts of our robot.
-            var roboImages = this.GetImageFiles(Path.Combine(_imageFileProvider.BasePath, RoboConsts.SetsDir, set));
+            var roboImages = new List<string>();
+            
+            // First, we'll check if we should generate a background
+            if (!string.IsNullOrEmpty(backgroundSet))
+                roboImages.Add(this.GetBackgroundImageFile(Path.Combine(_imageFileProvider.BasePath, RoboConsts.BackgroundsDir, backgroundSet)));            
+
+            // Then, we'll get a list of parts of our robot.
+            roboImages.AddRange(this.GetSetImageFiles(Path.Combine(_imageFileProvider.BasePath, RoboConsts.SetsDir, set)));
 
             // Then render the files.
             return this.RenderFiles(roboImages, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height);
@@ -120,7 +126,7 @@ namespace RoboHash.Net
         /// <returns></returns>
         protected abstract TImage RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight);
 
-        private IEnumerable<string> GetImageFiles(string path)
+        private IEnumerable<string> GetSetImageFiles(string path)
         {
             var index = RoboConsts.ImageIndex;
 
@@ -130,6 +136,12 @@ namespace RoboHash.Net
             retval.Sort(new ImageFileSorter());
 
             return retval;
+        }
+
+        private string GetBackgroundImageFile(string path)
+        {
+            var files = _imageFileProvider.GetFiles(path);
+            return files[(int) (_indicies[RoboConsts.BackgroundIndex]%files.Count)];
         }
 
         #region Helpers

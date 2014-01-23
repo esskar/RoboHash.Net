@@ -64,5 +64,21 @@ namespace RoboHash.Net.Tests
                 }
             }
         }
+
+        [TestMethod]
+        public void RenderWithBackgroundTests()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tests");
+            Directory.CreateDirectory(path);
+            for (var i = 0; i < _inputs.Length; ++i)
+            {
+                var r = RoboHash.Create(_inputs[i]);
+                using (var image = r.Render(null, RoboConsts.Any, null, 400, 400))
+                {
+                    var name = _inputs[i] + ".bg.png";
+                    image.Save(Path.Combine(path, name), ImageFormat.Png);
+                }
+            }
+        }
     }
 }
