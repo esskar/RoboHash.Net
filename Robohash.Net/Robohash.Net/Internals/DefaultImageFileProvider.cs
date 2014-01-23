@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Robohash.Net.Interfaces;
+using RoboHash.Net.Interfaces;
 
-namespace Robohash.Net.Internals
+namespace RoboHash.Net.Internals
 {
-    internal class DefaultImageFileProvider : IRobohashImageFileProvider
+    internal class DefaultImageFileProvider : IRoboHashImageFileProvider
     {
         private static readonly string[] _sets;
         private static readonly string[] _backgroundSets;

@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Robohash.Net.Interfaces;
+using RoboHash.Net.Interfaces;
 
-namespace Robohash.Net
+namespace RoboHash.Net
 {
-    public abstract class RobohashBase<TImage>
+    public abstract class RoboHashBase<TImage>
     {
-        private readonly IRobohashImageFileProvider _imageFileProvider;
+        private readonly IRoboHashImageFileProvider _imageFileProvider;
 
         private readonly long[] _indicies;
         private readonly string _hexDigest;
 
-        protected RobohashBase(string hexDigest, IRobohashImageFileProvider imageFileProvider)
+        protected RoboHashBase(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
         {
             if (string.IsNullOrEmpty(hexDigest) || (hexDigest.Length % 2) != 0)
                 throw new ArgumentException("hexDigest");

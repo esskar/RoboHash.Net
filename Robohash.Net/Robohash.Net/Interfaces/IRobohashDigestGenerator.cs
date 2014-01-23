@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Robohash.Net.Interfaces
+namespace RoboHash.Net.Interfaces
 {
-    public interface IRobohashDigestGenerator
+    public interface IRoboHashDigestGenerator
     {
         /// <summary>
         /// Generates the digest from the given stream.

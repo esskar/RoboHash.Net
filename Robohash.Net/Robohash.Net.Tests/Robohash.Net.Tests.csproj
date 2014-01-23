@@ -6,8 +6,8 @@
     <ProjectGuid>{6532C3F0-0795-48E0-9DD5-63C18D2E4279}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Robohash.Net.Tests</RootNamespace>
-    <AssemblyName>Robohash.Net.Tests</AssemblyName>
+    <RootNamespace>RoboHash.Net.Tests</RootNamespace>
+    <AssemblyName>RoboHash.Net.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,12 +52,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RobohashTests.cs" />
+    <Compile Include="RoboHashTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Robohash.Net\Robohash.Net.csproj">
+    <ProjectReference Include="..\RoboHash.Net\RoboHash.Net.csproj">
       <Project>{8b5d7c04-6f59-4dd0-9f67-cc0dc6aeb275}</Project>
-      <Name>Robohash.Net</Name>
+      <Name>RoboHash.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

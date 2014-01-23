@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
 
-namespace Robohash.Net.Internals
+namespace RoboHash.Net.Internals
 {
-    internal class DefaultDigestGenerator : RobohashDigestGeneratorBase
+    internal class DefaultDigestGenerator : RoboHashDigestGeneratorBase
     {
         public override byte[] GenerateDigest(Stream stream)
         {

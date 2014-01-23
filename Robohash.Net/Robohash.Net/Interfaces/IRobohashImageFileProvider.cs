@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Robohash.Net.Interfaces
+namespace RoboHash.Net.Interfaces
 {
-    public interface IRobohashImageFileProvider
+    public interface IRoboHashImageFileProvider
     {
         /// <summary>
         /// Gets the available robohash sets.

@@ -3,10 +3,10 @@ using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Robohash.Net.Tests
+namespace RoboHash.Net.Tests
 {
     [TestClass]
-    public class RobohashTests
+    public class RoboHashTests
     {
         private readonly string[] _inputs =
         {
@@ -28,7 +28,7 @@ namespace Robohash.Net.Tests
         {
             for (var i = 0; i < _inputs.Length; ++i)
             {
-                var r = Robohash.Create(_inputs[i]);
+                var r = RoboHash.Create(_inputs[i]);
                 Assert.AreEqual(_hexDigests[i], r.HexDigest, "HexDigest for input #{0} does not match.", i);
             }
         }
@@ -38,7 +38,7 @@ namespace Robohash.Net.Tests
         {
             for (var i = 0; i < _inputs.Length; ++i)
             {
-                var r = Robohash.Create(_inputs[i]);
+                var r = RoboHash.Create(_inputs[i]);
 
                 var h = _indices[i];
                 Assert.AreEqual(h.Length, r.Indices.Length, "Indices length for input #{0} does not match.", i);
@@ -56,7 +56,7 @@ namespace Robohash.Net.Tests
             Directory.CreateDirectory(path);
             for (var i = 0; i < _inputs.Length; ++i)
             {
-                var r = Robohash.Create(_inputs[i]);
+                var r = RoboHash.Create(_inputs[i]);
                 using (var image = r.Render())
                 {
                     var name = _inputs[i] + ".png";

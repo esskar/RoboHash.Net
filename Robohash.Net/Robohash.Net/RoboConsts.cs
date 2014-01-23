@@ -1,4 +1,4 @@
-﻿namespace Robohash.Net
+﻿namespace RoboHash.Net
 {
     public static class RoboConsts
     {

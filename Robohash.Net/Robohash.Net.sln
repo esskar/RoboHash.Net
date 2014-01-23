@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robohash.Net", "Robohash.Net\Robohash.Net.csproj", "{8B5D7C04-6F59-4DD0-9F67-CC0DC6AEB275}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboHash.Net", "RoboHash.Net\RoboHash.Net.csproj", "{8B5D7C04-6F59-4DD0-9F67-CC0DC6AEB275}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robohash.Net.Tests", "Robohash.Net.Tests\Robohash.Net.Tests.csproj", "{6532C3F0-0795-48E0-9DD5-63C18D2E4279}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboHash.Net.Tests", "RoboHash.Net.Tests\RoboHash.Net.Tests.csproj", "{6532C3F0-0795-48E0-9DD5-63C18D2E4279}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robohash.Net.Resources", "Robohash.Net.Resources\Robohash.Net.Resources.csproj", "{BBE45286-3846-42A4-9809-B632F6D624FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboHash.Net.Resources", "RoboHash.Net.Resources\RoboHash.Net.Resources.csproj", "{BBE45286-3846-42A4-9809-B632F6D624FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

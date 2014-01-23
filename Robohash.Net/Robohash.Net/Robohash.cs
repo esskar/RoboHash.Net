@@ -3,17 +3,17 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
-using Robohash.Net.Interfaces;
-using Robohash.Net.Internals;
+using RoboHash.Net.Interfaces;
+using RoboHash.Net.Internals;
 
-namespace Robohash.Net
+namespace RoboHash.Net
 {
-    public class Robohash : RobohashBase<Image>
+    public class RoboHash : RoboHashBase<Image>
     {
-        private static readonly IRobohashImageFileProvider _imageFileProvider;
-        private static readonly IRobohashDigestGenerator _digestGenerator;
+        private static readonly IRoboHashImageFileProvider _imageFileProvider;
+        private static readonly IRoboHashDigestGenerator _digestGenerator;
 
-        static Robohash()
+        static RoboHash()
         {
             _imageFileProvider = new DefaultImageFileProvider();
             _digestGenerator = new DefaultDigestGenerator();
@@ -24,7 +24,7 @@ namespace Robohash.Net
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
-        public static Robohash Create(string text)
+        public static RoboHash Create(string text)
         {
             var bytes = Encoding.UTF8.GetBytes(text);
             return Create(bytes, 0, bytes.Length);
@@ -37,7 +37,7 @@ namespace Robohash.Net
         /// <param name="offset">The offset.</param>
         /// <param name="length">The length.</param>
         /// <returns></returns>
-        public static Robohash Create(byte[] bytes, int offset, int length)
+        public static RoboHash Create(byte[] bytes, int offset, int length)
         {
             using (var memory = new MemoryStream(bytes, offset, length))
                 return Create(memory);
@@ -48,13 +48,13 @@ namespace Robohash.Net
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
-        public static Robohash Create(Stream stream)
+        public static RoboHash Create(Stream stream)
         {
             var hexDigest = _digestGenerator.GenerateHexDigest(stream);
-            return new Robohash(hexDigest, _imageFileProvider);
+            return new RoboHash(hexDigest, _imageFileProvider);
         }
 
-        public Robohash(string hexDigest, IRobohashImageFileProvider imageFileProvider)
+        public RoboHash(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
             : base(hexDigest, imageFileProvider) { }
 
 

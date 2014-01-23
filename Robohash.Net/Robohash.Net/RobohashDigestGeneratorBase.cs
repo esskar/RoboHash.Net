@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Robohash.Net.Interfaces;
+using RoboHash.Net.Interfaces;
 
-namespace Robohash.Net
+namespace RoboHash.Net
 {
-    public abstract class RobohashDigestGeneratorBase : IRobohashDigestGenerator
+    public abstract class RoboHashDigestGeneratorBase : IRoboHashDigestGenerator
     {
         /// <summary>
         /// Generates the digest from the given stream.
