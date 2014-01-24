@@ -1,6 +1,6 @@
 ﻿namespace RoboHashDotNet.Web.Models
 {
-    public class RootModel
+    public class MainModel
     {
         public string IpAddress { get; set; }
     }

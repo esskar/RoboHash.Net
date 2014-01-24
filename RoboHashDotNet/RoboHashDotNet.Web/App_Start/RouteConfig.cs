@@ -10,14 +10,9 @@ namespace RoboHashDotNet.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapRoute(
                 name: "Api",
-                url: "{token}/",
-                defaults: new { controller = "Api", action = "Render" }
-            );
-            routes.MapRoute(
-                name: "Default",
-                url: "",
-                defaults: new { controller = "Root", action = "Index" }
-            );
+                url: "{*token}",
+                defaults: new { controller = "Main", action = "Default" }
+            );            
         }
     }
 }
