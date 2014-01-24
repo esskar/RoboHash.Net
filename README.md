@@ -1,4 +1,4 @@
-# RoboHash.Net
+# RoboHashDotNet
 
 Create RoboHashes with C# and .NET
 
