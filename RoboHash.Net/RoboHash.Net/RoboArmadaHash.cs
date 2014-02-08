@@ -70,8 +70,7 @@ namespace RoboHash.Net
             using (var memory = new MemoryStream(bytes, 0, bytes.Length))
                 return RoboArmadaHash.DigestGenerator.GenerateHexDigest(memory);
         }
-        private const double Factor = .90;
-
+        
         private readonly string _hexDigest1;
         private readonly string _hexDigest2;
         private readonly string _hexDigest3;
@@ -100,13 +99,15 @@ namespace RoboHash.Net
             Image image1 = null, image2 = null, image3 = null;
             try
             {
-                var facHeight = (int)(height * Factor);
-                var facWidth = (int)(width * Factor);
+                var facHeight2 = (int)(height * 0.85);
+                var facWidth2 = (int)(width * 0.85);
+                var facHeight3 = (int)(height * 0.90);
+                var facWidth3 = (int)(width * 0.90);
 
 
                 image1 = RenderOne(_hexDigest1, width, height);
-                image2 = RenderOne(_hexDigest2, facWidth, facHeight);
-                image3 = RenderOne(_hexDigest3, facWidth, facHeight);
+                image2 = RenderOne(_hexDigest2, facWidth2, facHeight2);
+                image3 = RenderOne(_hexDigest3, facWidth3, facHeight3);
 
                 var robo = RoboHash.Create(Xor(Xor(_hexDigest1, _hexDigest2), _hexDigest3));
                 var backgroundImageName = robo.GetBackgroundImageFileName(backgroundSet);
@@ -130,14 +131,15 @@ namespace RoboHash.Net
                         var y = (height - height) / 2;
 
                         var left = (int)(width / 4.0 - width * 0.05);
-                        var right = (int)(width / 4.0 + width * 0.05);
+                        var right = (int)(width / 4.0 + width * 0.1);
 
-                        var offHeight = height - facHeight;
+                        var offHeight2 = height - facHeight2;
+                        var offHeight3 = height - facHeight3;
 
-                        canvas.DrawImage(image2, new Rectangle(x - left, y + offHeight, image2.Width, image2.Height),
+                        canvas.DrawImage(image2, new Rectangle(x - left, y + offHeight2, image2.Width, image2.Height),
                             new Rectangle(0, 0, image2.Width, image2.Height), GraphicsUnit.Pixel);
 
-                        canvas.DrawImage(image3, new Rectangle(x + right, y + offHeight, image3.Width, image3.Height),
+                        canvas.DrawImage(image3, new Rectangle(x + right, y + offHeight3, image3.Width, image3.Height),
                             new Rectangle(0, 0, image3.Width, image3.Height), GraphicsUnit.Pixel);
 
                         canvas.DrawImage(image1, new Rectangle(x, y, image1.Width, image1.Height),
