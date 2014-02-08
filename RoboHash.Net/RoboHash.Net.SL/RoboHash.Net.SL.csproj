@@ -71,6 +71,9 @@
     <Compile Include="..\Mono\SHA512Managed.cs">
       <Link>Internals\SHA512Managed.cs</Link>
     </Compile>
+    <Compile Include="..\Robohash.Net\Interfaces\IRoboHash.cs">
+      <Link>Interfaces\IRoboHash.cs</Link>
+    </Compile>
     <Compile Include="..\RoboHash.Net\Interfaces\IRoboHashDigestGenerator.cs">
       <Link>Interfaces\IRoboHashDigestGenerator.cs</Link>
     </Compile>

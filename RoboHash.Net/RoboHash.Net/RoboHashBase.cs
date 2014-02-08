@@ -6,13 +6,13 @@ using RoboHash.Net.Interfaces;
 
 namespace RoboHash.Net
 {
-    public abstract class RoboHashBase<TImage>
+    public abstract class RoboHashBase<TImage> : IRoboHash<TImage>
     {
         private readonly IRoboHashImageFileProvider _imageFileProvider;
 
         private readonly long[] _indicies;
         private readonly string _hexDigest;
-        
+
         protected RoboHashBase(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
         {
             if (string.IsNullOrEmpty(hexDigest) || (hexDigest.Length % 2) != 0)
@@ -89,10 +89,7 @@ namespace RoboHash.Net
             }
 
             // If they specified a background, ensure it's legal, then give it to them.
-            if (RoboConsts.Any.Equals(backgroundSet, StringComparison.OrdinalIgnoreCase))
-                backgroundSet = _imageFileProvider.BackgroundSets[_indicies[RoboConsts.BackgroundSetIndex] % _imageFileProvider.BackgroundSets.Length];
-            else if (!_imageFileProvider.BackgroundSets.Contains(backgroundSet))
-                backgroundSet = null;
+            var backgroundImageFile = GetBackgroundImageFileName(backgroundSet);
 
             // Each directory in our set represents one piece of the Robot, such as the eyes, nose, mouth, etc.
 
@@ -103,16 +100,29 @@ namespace RoboHash.Net
             // For instance, the head has to go down BEFORE the eyes, or the eyes would be hidden.
 
             var roboImages = new List<string>();
-            
+
             // First, we'll check if we should generate a background
-            if (!string.IsNullOrEmpty(backgroundSet))
-                roboImages.Add(this.GetBackgroundImageFile(Path.Combine(_imageFileProvider.BasePath, RoboConsts.BackgroundsDir, backgroundSet)));            
+            if (!string.IsNullOrEmpty(backgroundImageFile))
+                roboImages.Add(backgroundImageFile);
 
             // Then, we'll get a list of parts of our robot.
             roboImages.AddRange(this.GetSetImageFiles(Path.Combine(_imageFileProvider.BasePath, RoboConsts.SetsDir, set)));
 
             // Then render the files.
             return this.RenderFiles(roboImages, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height);
+        }
+
+        public string GetBackgroundImageFileName(string backgroundSet)
+        {
+            if (RoboConsts.Any.Equals(backgroundSet, StringComparison.OrdinalIgnoreCase))
+                backgroundSet = _imageFileProvider.BackgroundSets[_indicies[RoboConsts.BackgroundSetIndex] % _imageFileProvider.BackgroundSets.Length];
+            else if (!_imageFileProvider.BackgroundSets.Contains(backgroundSet))
+                backgroundSet = null;
+
+            if (string.IsNullOrEmpty(backgroundSet))
+                return null;
+
+            return this.GetBackgroundImageFile(Path.Combine(_imageFileProvider.BasePath, RoboConsts.BackgroundsDir, backgroundSet));
         }
 
         /// <summary>
@@ -128,11 +138,16 @@ namespace RoboHash.Net
 
         private IEnumerable<string> GetSetImageFiles(string path)
         {
-            var index = RoboConsts.ImageIndex;
+            var retval = new List<string>();
 
-            var retval = _imageFileProvider.GetDirectories(path)
-                .Select(_imageFileProvider.GetFiles)
-                .Select(files => files[(int)(_indicies[index++] % files.Count)]).ToList();
+            var index = RoboConsts.ImageIndex;
+            var dirs = _imageFileProvider.GetDirectories(path);
+            foreach (var dir in dirs)
+            {
+                var files = _imageFileProvider.GetFiles(dir);
+                var file = files[(int)(_indicies[index++] % files.Count)];
+                retval.Add(file);
+            }
             retval.Sort(new ImageFileSorter());
 
             return retval;
@@ -141,7 +156,7 @@ namespace RoboHash.Net
         private string GetBackgroundImageFile(string path)
         {
             var files = _imageFileProvider.GetFiles(path);
-            return files[(int) (_indicies[RoboConsts.BackgroundIndex]%files.Count)];
+            return files[(int)(_indicies[RoboConsts.BackgroundIndex] % files.Count)];
         }
 
         #region Helpers

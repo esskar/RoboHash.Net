@@ -47,6 +47,8 @@
     <Compile Include="Interfaces\IRoboHashImageFileProvider.cs" />
     <Compile Include="Internals\DefaultDigestGenerator.cs" />
     <Compile Include="Internals\DefaultImageFileProvider.cs" />
+    <Compile Include="Interfaces\IRoboHash.cs" />
+    <Compile Include="RoboArmadaHash.cs" />
     <Compile Include="RoboConsts.cs" />
     <Compile Include="RoboHash.cs" />
     <Compile Include="RoboHashBase.cs" />

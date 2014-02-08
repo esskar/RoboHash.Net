@@ -59,7 +59,7 @@ namespace RoboHash.Net
             var hexDigest = RoboHash.DigestGenerator.GenerateHexDigest(stream);
             return new RoboHash(hexDigest, RoboHash.ImageFileProvider);
         }
-
+        
         public RoboHash(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
             : base(hexDigest, imageFileProvider) { }
 
