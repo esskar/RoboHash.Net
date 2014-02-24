@@ -18,7 +18,8 @@ namespace RoboHash.Net.Interfaces
         /// <param name="color">The color.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
+        /// <param name="grayscale">if set to <c>true</c> [grayscale].</param>
         /// <returns></returns>
-        TImage Render(string set, string backgroundSet, string color, int width, int height);
+        TImage Render(string set, string backgroundSet, string color, int width, int height, bool grayscale = false);
     }
 }

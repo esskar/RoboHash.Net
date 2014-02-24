@@ -29,6 +29,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,6 +57,7 @@
     <Compile Include="Internals\DefaultDigestGenerator.cs" />
     <Compile Include="Internals\DefaultImageFileProvider.cs" />
     <Compile Include="Interfaces\IRoboHash.cs" />
+    <Compile Include="Internals\GrayscaleHelper.cs" />
     <Compile Include="RoboArmadaHash.cs" />
     <Compile Include="RoboConsts.cs" />
     <Compile Include="RoboHash.cs" />

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Security.Policy;
 using System.Text;
 using RoboHash.Net.Interfaces;
 using RoboHash.Net.Internals;
@@ -12,6 +14,7 @@ namespace RoboHash.Net
     {
         private static IRoboHashImageFileProvider _imageFileProvider;
         private static IRoboHashDigestGenerator _digestGenerator;
+        
 
         public static IRoboHashImageFileProvider ImageFileProvider
         {
@@ -59,12 +62,12 @@ namespace RoboHash.Net
             var hexDigest = RoboHash.DigestGenerator.GenerateHexDigest(stream);
             return new RoboHash(hexDigest, RoboHash.ImageFileProvider);
         }
-        
+
         public RoboHash(string hexDigest, IRoboHashImageFileProvider imageFileProvider)
             : base(hexDigest, imageFileProvider) { }
 
 
-        protected override Image RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight)
+        protected override Image RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, bool grayscale)
         {
             var retval = new Bitmap(srcWidth, srcHeight);
             using (var canvas = Graphics.FromImage(retval))
@@ -75,7 +78,7 @@ namespace RoboHash.Net
                     using (var image = Image.FromFile(imageFile))
                         canvas.DrawImage(image, new Rectangle(0, 0, srcWidth, srcHeight),
                             new Rectangle(0, 0, image.Width, image.Height), GraphicsUnit.Pixel);
-                }                
+                }
                 canvas.Save();
             }
 
@@ -86,7 +89,12 @@ namespace RoboHash.Net
 
                 retval = resizedImage;
             }
-            
+
+            if (grayscale)
+            {
+                GrayscaleHelper.MakeGray(ref retval);
+            }
+
             return retval;
         }
     }
