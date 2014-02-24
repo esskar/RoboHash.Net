@@ -67,7 +67,17 @@ namespace RoboHash.Net
             : base(hexDigest, imageFileProvider) { }
 
 
-        protected override Image RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, bool grayscale)
+        /// <summary>
+        /// Renders the files.
+        /// </summary>
+        /// <param name="srcFiles">The source files.</param>
+        /// <param name="srcWidth">Width of the source.</param>
+        /// <param name="srcHeight">Height of the source.</param>
+        /// <param name="destWidth">Width of the dest.</param>
+        /// <param name="destHeight">Height of the dest.</param>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
+        protected override Image RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options)
         {
             var retval = new Bitmap(srcWidth, srcHeight);
             using (var canvas = Graphics.FromImage(retval))
@@ -90,10 +100,10 @@ namespace RoboHash.Net
                 retval = resizedImage;
             }
 
-            if (grayscale)
-            {
-                GrayscaleHelper.MakeGray(ref retval);
-            }
+            if (options.HasFlag(Options.Grayscale))
+                ImageHelper.MakeBlackAndWhite(ref retval);
+            if (options.HasFlag(Options.Blur))
+                ImageHelper.Blur(ref retval, 20);
 
             return retval;
         }

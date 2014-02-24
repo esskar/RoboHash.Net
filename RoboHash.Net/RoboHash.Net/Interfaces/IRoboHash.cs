@@ -1,5 +1,15 @@
+using System;
+
 namespace RoboHash.Net.Interfaces
 {
+    [Flags]
+    public enum Options
+    {
+        None = 0,
+        Grayscale = 0x1,
+        Blur = 0x2,
+    }
+
     public interface IRoboHash<out TImage>
     {
         /// <summary>
@@ -18,8 +28,8 @@ namespace RoboHash.Net.Interfaces
         /// <param name="color">The color.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        /// <param name="grayscale">if set to <c>true</c> [grayscale].</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        TImage Render(string set, string backgroundSet, string color, int width, int height, bool grayscale = false);
+        TImage Render(string set, string backgroundSet, string color, int width, int height, Options options = Options.None);
     }
 }

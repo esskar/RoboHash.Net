@@ -94,8 +94,8 @@ namespace RoboHash.Net
             return this.Render(null, null, null, width, height);
         }
 
-        public Image Render(string set, string backgroundSet, string color, int width, int height, bool grayscale = false)
-        {
+        public Image Render(string set, string backgroundSet, string color, int width, int height, Options options = Options.None)
+        {            
             Image image1 = null, image2 = null, image3 = null;
             try
             {
@@ -147,8 +147,10 @@ namespace RoboHash.Net
                     }
 
 
-                    if (grayscale)
-                        GrayscaleHelper.MakeGray(ref retval);
+                    if (options.HasFlag(Options.Grayscale))
+                        ImageHelper.MakeBlackAndWhite(ref retval);
+                    if (options.HasFlag(Options.Blur))
+                        ImageHelper.Blur(ref retval, 20);
                 }
                 catch
                 {

@@ -66,9 +66,9 @@ namespace RoboHash.Net
         /// <param name="color">The color.</param>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
-        /// <param name="grayscale">if set to <c>true</c> [grayscale].</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        public TImage Render(string set, string backgroundSet, string color, int width, int height, bool grayscale = false)
+        public TImage Render(string set, string backgroundSet, string color, int width, int height, Options options = Options.None)
         {
             // Allow users to manually specify a robot 'set' that they like.
             // Ensure that this is one of the allowed choices, or allow all
@@ -110,7 +110,7 @@ namespace RoboHash.Net
             roboImages.AddRange(this.GetSetImageFiles(Path.Combine(_imageFileProvider.BasePath, RoboConsts.SetsDir, set)));
 
             // Then render the files.
-            return this.RenderFiles(roboImages, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height, grayscale);
+            return this.RenderFiles(roboImages, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height, options);
         }
 
         public string GetBackgroundImageFileName(string backgroundSet)
@@ -136,7 +136,7 @@ namespace RoboHash.Net
         /// <param name="destHeight">Height of the dest.</param>
         /// <param name="greyScale">if set to <c>true</c> [grey scale].</param>
         /// <returns></returns>
-        protected abstract TImage RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, bool greyScale);
+        protected abstract TImage RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options);
 
         private IEnumerable<string> GetSetImageFiles(string path)
         {
