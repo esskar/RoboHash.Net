@@ -150,7 +150,7 @@ namespace RoboHash.Net
                     if (options.HasFlag(Options.Grayscale))
                         ImageHelper.MakeBlackAndWhite(ref retval);
                     if (options.HasFlag(Options.Blur))
-                        ImageHelper.Blur(ref retval, 20);
+                        ImageHelper.Blur(ref retval, 5);
                 }
                 catch
                 {
