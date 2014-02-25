@@ -85,16 +85,22 @@ namespace RoboHash.Net
 
             return retval;
         }*/
-        protected override ImageSource RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options)
+        protected override ImageSource RenderFiles(IEnumerable<string> srcFiles, string backgroundColor, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options)
         {
             var retval = new WriteableBitmap(srcWidth, srcHeight);
+            if (backgroundColor != null)
+            {
+                var color = RoboHelper.ConvertHexColor(backgroundColor);
+                retval.FillRectangle(0, 0, srcHeight, srcHeight, color);
+            }
+
             foreach (var imageFile in srcFiles)
             {
                 var image = new BitmapImage();
                 using (var fs = new FileStream(imageFile, FileMode.Open))
                     image.SetSource(fs);
                 retval.Blit(new Rect(0, 0, srcWidth, srcHeight), new WriteableBitmap(image), new Rect(0, 0, image.PixelWidth, image.PixelHeight));
-                
+
                 //TOOD implement options
             }
             return retval;

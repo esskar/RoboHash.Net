@@ -95,6 +95,7 @@
     <Compile Include="..\RoboHash.Net\RoboHashDigestGeneratorBase.cs">
       <Link>RoboHashDigestGeneratorBase.cs</Link>
     </Compile>
+    <Compile Include="Internals\RoboHelper.cs" />
     <Compile Include="RoboHash.cs" />
   </ItemGroup>
   <ItemGroup>
