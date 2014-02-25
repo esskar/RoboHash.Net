@@ -7,7 +7,7 @@ namespace RoboHash.Net.Interfaces
     {
         None = 0,
         Grayscale = 0x1,
-        Blur = 0x2,
+        Blur = 0x2,        
     }
 
     public interface IRoboHash<out TImage>

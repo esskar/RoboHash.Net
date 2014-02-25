@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using RoboHash.Net.Interfaces;
@@ -89,8 +91,11 @@ namespace RoboHash.Net
                     set = Path.Combine(set, _imageFileProvider.Colors[_indicies[RoboConsts.ColorIndex] % _imageFileProvider.Colors.Length]);
             }
 
+            // If they specified a background color, use it!
+            var backgroundColor = backgroundSet != null && backgroundSet.StartsWith("#") ? backgroundSet : null;
+
             // If they specified a background, ensure it's legal, then give it to them.
-            var backgroundImageFile = GetBackgroundImageFileName(backgroundSet);
+            var backgroundImageFile = backgroundColor == null ? GetBackgroundImageFileName(backgroundSet) : null;
 
             // Each directory in our set represents one piece of the Robot, such as the eyes, nose, mouth, etc.
 
@@ -110,7 +115,7 @@ namespace RoboHash.Net
             roboImages.AddRange(this.GetSetImageFiles(Path.Combine(_imageFileProvider.BasePath, RoboConsts.SetsDir, set)));
 
             // Then render the files.
-            return this.RenderFiles(roboImages, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height, options);
+            return this.RenderFiles(roboImages, backgroundColor, RoboConsts.ImageWidth, RoboConsts.ImageHeight, width, height, options);
         }
 
         public string GetBackgroundImageFileName(string backgroundSet)
@@ -130,13 +135,14 @@ namespace RoboHash.Net
         /// Renders the files.
         /// </summary>
         /// <param name="srcFiles">The source files.</param>
+        /// <param name="backgroundColor">Color of the background.</param>
         /// <param name="srcWidth">Width of the source.</param>
         /// <param name="srcHeight">Height of the source.</param>
         /// <param name="destWidth">Width of the dest.</param>
         /// <param name="destHeight">Height of the dest.</param>
-        /// <param name="greyScale">if set to <c>true</c> [grey scale].</param>
+        /// <param name="options">The options.</param>
         /// <returns></returns>
-        protected abstract TImage RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options);
+        protected abstract TImage RenderFiles(IEnumerable<string> srcFiles, string backgroundColor, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options);
 
         private IEnumerable<string> GetSetImageFiles(string path)
         {
@@ -160,7 +166,7 @@ namespace RoboHash.Net
             var files = _imageFileProvider.GetFiles(path);
             return files[(int)(_indicies[RoboConsts.BackgroundIndex] % files.Count)];
         }
-
+        
         #region Helpers
 
         private static IEnumerable<long> CreateIndices(string hexDigest, int hashCount)

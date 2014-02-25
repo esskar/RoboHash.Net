@@ -71,18 +71,26 @@ namespace RoboHash.Net
         /// Renders the files.
         /// </summary>
         /// <param name="srcFiles">The source files.</param>
+        /// <param name="backgroundColor">Color of the background.</param>
         /// <param name="srcWidth">Width of the source.</param>
         /// <param name="srcHeight">Height of the source.</param>
         /// <param name="destWidth">Width of the dest.</param>
         /// <param name="destHeight">Height of the dest.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        protected override Image RenderFiles(IEnumerable<string> srcFiles, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options)
+        protected override Image RenderFiles(IEnumerable<string> srcFiles, string backgroundColor, int srcWidth, int srcHeight, int destWidth, int destHeight, Options options)
         {
             var retval = new Bitmap(srcWidth, srcHeight);
             using (var canvas = Graphics.FromImage(retval))
             {
                 canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                if (!string.IsNullOrWhiteSpace(backgroundColor))
+                {
+                    var color = RoboHelper.ConvertHexColor(backgroundColor);
+                    using (var brush = new SolidBrush(color))
+                        canvas.FillRectangle(brush, 0, 0, srcWidth, srcHeight);
+                }                
+
                 foreach (var imageFile in srcFiles)
                 {
                     using (var image = Image.FromFile(imageFile))
@@ -101,9 +109,9 @@ namespace RoboHash.Net
             }
 
             if (options.HasFlag(Options.Grayscale))
-                ImageHelper.MakeBlackAndWhite(ref retval);
+                RoboHelper.MakeBlackAndWhite(ref retval);
             if (options.HasFlag(Options.Blur))
-                ImageHelper.Blur(ref retval, 5);
+                RoboHelper.Blur(ref retval, 5);
 
             return retval;
         }

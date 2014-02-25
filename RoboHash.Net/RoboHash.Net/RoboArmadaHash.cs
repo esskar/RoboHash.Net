@@ -70,7 +70,7 @@ namespace RoboHash.Net
             using (var memory = new MemoryStream(bytes, 0, bytes.Length))
                 return RoboArmadaHash.DigestGenerator.GenerateHexDigest(memory);
         }
-        
+
         private readonly string _hexDigest1;
         private readonly string _hexDigest2;
         private readonly string _hexDigest3;
@@ -95,7 +95,7 @@ namespace RoboHash.Net
         }
 
         public Image Render(string set, string backgroundSet, string color, int width, int height, Options options = Options.None)
-        {            
+        {
             Image image1 = null, image2 = null, image3 = null;
             try
             {
@@ -110,7 +110,8 @@ namespace RoboHash.Net
                 image3 = RenderOne(_hexDigest3, facWidth3, facHeight3);
 
                 var robo = RoboHash.Create(Xor(Xor(_hexDigest1, _hexDigest2), _hexDigest3));
-                var backgroundImageName = robo.GetBackgroundImageFileName(backgroundSet);
+                var backgroundColor = backgroundSet != null && backgroundSet.StartsWith("#") ? backgroundSet : null;
+                var backgroundImageName = backgroundColor == null ? robo.GetBackgroundImageFileName(backgroundSet) : null;
 
                 var retval = new Bitmap(width, height);
                 try
@@ -118,7 +119,12 @@ namespace RoboHash.Net
                     using (var canvas = Graphics.FromImage(retval))
                     {
                         canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        if (!string.IsNullOrWhiteSpace(backgroundImageName))
+                        if (backgroundColor != null)
+                        {
+                            using (var brush = new SolidBrush(RoboHelper.ConvertHexColor(backgroundColor)))
+                                canvas.FillRectangle(brush, 0, 0, width, height);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(backgroundImageName))
                         {
                             using (var image = Image.FromFile(backgroundImageName))
                             {
@@ -148,9 +154,9 @@ namespace RoboHash.Net
 
 
                     if (options.HasFlag(Options.Grayscale))
-                        ImageHelper.MakeBlackAndWhite(ref retval);
+                        RoboHelper.MakeBlackAndWhite(ref retval);
                     if (options.HasFlag(Options.Blur))
-                        ImageHelper.Blur(ref retval, 5);
+                        RoboHelper.Blur(ref retval, 5);
                 }
                 catch
                 {
